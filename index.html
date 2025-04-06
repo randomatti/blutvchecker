@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BluTV Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -13,34 +14,61 @@
         }
         
         body {
-            background-color: #1a1a2e;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: #fff;
             min-height: 100vh;
             padding: 2rem;
+            background-attachment: fixed;
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 2rem;
-            background-color: #16213e;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: rgba(16, 18, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
         }
         
         h1 {
-            text-align: center;
-            color: #00bcd4;
-            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #00ffff;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        .logo {
+            width: 80px;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.9;
         }
         
         .input-section {
             margin-bottom: 2rem;
-            padding: 1.5rem;
-            background-color: #0f3460;
-            border-radius: 8px;
+            padding: 1.8rem;
+            background: linear-gradient(to right, #0a1535, #0f2456);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .file-input {
@@ -52,18 +80,21 @@
         
         .file-input label {
             display: inline-block;
-            background-color: #00bcd4;
-            color: #000;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
+            background: linear-gradient(45deg, #00ccff, #0066ff);
+            color: #fff;
+            padding: 1rem 1.8rem;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             text-align: center;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
         }
         
         .file-input label:hover {
-            background-color: #00a0b4;
+            background: linear-gradient(45deg, #0099ff, #004de6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
         }
         
         .file-input input[type="file"] {
@@ -74,119 +105,254 @@
             margin-top: 0.5rem;
             font-size: 0.9rem;
             color: #ccc;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
         }
         
         .actions {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
         }
         
         button {
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 1.8rem;
             border: none;
-            border-radius: 5px;
-            background-color: #e94560;
-            color: white;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
         
-        button:hover {
-            background-color: #d13350;
+        .primary-btn {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+        }
+        
+        .primary-btn:hover {
+            background: linear-gradient(45deg, #ff2956, #ff3b1b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.4);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+        
+        .secondary-btn:hover {
+            background: linear-gradient(45deg, #326fc4, #00b8e0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
         }
         
         button:disabled {
-            background-color: #6c6c6c;
+            background: linear-gradient(45deg, #666, #999);
+            transform: none;
+            box-shadow: none;
             cursor: not-allowed;
         }
         
         .progress-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
         
         .progress-bar {
-            height: 20px;
-            background-color: #2a2a4a;
-            border-radius: 10px;
+            height: 24px;
+            background-color: rgba(10, 15, 30, 0.6);
+            border-radius: 12px;
             overflow: hidden;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
         }
         
         .progress {
             height: 100%;
-            background-color: #00bcd4;
+            background: linear-gradient(45deg, #00ff87, #00c3ff);
             width: 0%;
             transition: width 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
         }
         
         .info {
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
-            color: #ccc;
+            color: #ddd;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
         
         .results-section {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
         }
         
         .result-box {
             flex: 1;
-            background-color: #0f3460;
-            border-radius: 8px;
-            padding: 1rem;
+            background: linear-gradient(to bottom, #0a1535, #0f2456);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .result-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .result-box h2 {
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #2d4a6d;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .success h2 {
-            color: #4CAF50;
+            color: #00ff87;
         }
         
         .fail h2 {
-            color: #FF5252;
+            color: #ff5c7c;
+        }
+        
+        .download-btn {
+            background: transparent;
+            color: #00c3ff;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            border: 1px solid #00c3ff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: rgba(0, 195, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:disabled {
+            color: #666;
+            border-color: #666;
+            background: transparent;
         }
         
         .result-list {
-            height: 300px;
+            height: 320px;
             overflow-y: auto;
-            background-color: #1a2744;
-            border-radius: 5px;
-            padding: 0.5rem;
+            background-color: rgba(10, 15, 30, 0.6);
+            border-radius: 8px;
+            padding: 0.8rem;
         }
         
         .result-item {
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 3px;
-            font-family: monospace;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
             font-size: 0.9rem;
             word-break: break-all;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .success .result-item {
-            background-color: #1e3a23;
+            background-color: rgba(0, 255, 135, 0.1);
+            border-left: 3px solid #00ff87;
         }
         
         .fail .result-item {
-            background-color: #3a1e1e;
+            background-color: rgba(255, 92, 124, 0.1);
+            border-left: 3px solid #ff5c7c;
+        }
+        
+        .result-item-top {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-item-details {
+            font-size: 0.8rem;
+            color: #aaa;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .detail {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .pin-status {
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        
+        .pin-exists {
+            background-color: rgba(255, 59, 59, 0.2);
+            color: #ff5c7c;
+        }
+        
+        .pin-none {
+            background-color: rgba(0, 255, 135, 0.2);
+            color: #00ff87;
         }
         
         .count {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             text-align: right;
-            margin-top: 0.5rem;
-            color: #ccc;
+            margin-top: 0.8rem;
+            color: #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .count-badge {
+            display: inline-block;
+            background-color: rgba(0, 195, 255, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            color: #00c3ff;
+            font-weight: bold;
         }
         
         /* Custom Scrollbar */
@@ -195,17 +361,17 @@
         }
         
         ::-webkit-scrollbar-track {
-            background: #1a2744;
+            background: rgba(10, 15, 30, 0.6);
             border-radius: 5px;
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #3a4a6d;
+            background: linear-gradient(180deg, #00c3ff, #0066ff);
             border-radius: 5px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: #4a5a7d;
+            background: linear-gradient(180deg, #00b8e0, #0055d6);
         }
         
         @media (max-width: 768px) {
@@ -214,29 +380,36 @@
             }
             
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
             
             body {
                 padding: 1rem;
+            }
+            
+            .actions {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>BluTV Checker</h1>
+        <div class="header">
+            <h1>BluTV Checker</h1>
+            <p class="subtitle">MAIL:PASS format kontrol aracı</p>
+        </div>
         
         <div class="input-section">
             <div class="file-input">
-                <label for="combo-file">Combo Dosyası Seç (MAIL:PASS formatında)</label>
+                <label for="combo-file"><i class="fas fa-file-upload"></i> Combo Dosyası Seç (MAIL:PASS formatında)</label>
                 <input type="file" id="combo-file" accept=".txt">
-                <div class="file-name" id="file-name">Dosya seçilmedi</div>
+                <div class="file-name" id="file-name"><i class="fas fa-info-circle"></i> Dosya seçilmedi</div>
             </div>
             
             <div class="actions">
-                <button id="start-btn" disabled>Taramayı Başlat</button>
-                <button id="stop-btn" disabled>Durdur</button>
+                <button id="start-btn" class="primary-btn" disabled><i class="fas fa-play"></i> Taramayı Başlat</button>
+                <button id="stop-btn" class="secondary-btn" disabled><i class="fas fa-stop"></i> Durdur</button>
             </div>
             
             <div class="progress-section">
@@ -244,23 +417,34 @@
                     <div class="progress" id="progress"></div>
                 </div>
                 <div class="info">
-                    <span id="progress-info">0/0</span>
-                    <span id="time-info">00:00:00</span>
+                    <span id="progress-info"><i class="fas fa-tasks"></i> 0/0</span>
+                    <span id="time-info"><i class="fas fa-clock"></i> 00:00:00</span>
                 </div>
             </div>
         </div>
         
         <div class="results-section">
             <div class="result-box success">
-                <h2>Başarılı Girişler</h2>
+                <div class="result-box-header">
+                    <h2><i class="fas fa-check-circle"></i> Başarılı Girişler</h2>
+                    <button id="download-success" class="download-btn" disabled><i class="fas fa-download"></i> İndir</button>
+                </div>
                 <div class="result-list" id="success-list"></div>
-                <div class="count" id="success-count">0 başarılı</div>
+                <div class="count">
+                    <span>Profiller: <span id="profiles-count">0 PIN Var, 0 PIN Yok</span></span>
+                    <span class="count-badge" id="success-count">0 başarılı</span>
+                </div>
             </div>
             
             <div class="result-box fail">
-                <h2>Başarısız Girişler</h2>
+                <div class="result-box-header">
+                    <h2><i class="fas fa-times-circle"></i> Başarısız Girişler</h2>
+                </div>
                 <div class="result-list" id="fail-list"></div>
-                <div class="count" id="fail-count">0 başarısız</div>
+                <div class="count">
+                    <span></span>
+                    <span class="count-badge" id="fail-count">0 başarısız</span>
+                </div>
             </div>
         </div>
     </div>
@@ -278,6 +462,8 @@
         const failList = document.getElementById('fail-list');
         const successCount = document.getElementById('success-count');
         const failCount = document.getElementById('fail-count');
+        const downloadSuccessBtn = document.getElementById('download-success');
+        const profilesCount = document.getElementById('profiles-count');
 
         // Variables
         let comboLines = [];
@@ -285,20 +471,24 @@
         let checkedCombos = 0;
         let successCombos = 0;
         let failCombos = 0;
+        let pinExists = 0;
+        let pinNone = 0;
         let isChecking = false;
         let startTime;
         let timer;
+        let successfulAccounts = [];
         
         // Event Listeners
         comboFileInput.addEventListener('change', handleFileSelect);
         startBtn.addEventListener('click', startChecking);
         stopBtn.addEventListener('click', stopChecking);
+        downloadSuccessBtn.addEventListener('click', downloadSuccessful);
 
         // Functions
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
-                fileNameDisplay.textContent = file.name;
+                fileNameDisplay.innerHTML = `<i class="fas fa-file-alt"></i> ${file.name}`;
                 startBtn.disabled = false;
                 
                 const reader = new FileReader();
@@ -307,7 +497,7 @@
                         .map(line => line.trim())
                         .filter(line => line.includes(':'));
                     totalCombos = comboLines.length;
-                    progressInfo.textContent = `0/${totalCombos}`;
+                    progressInfo.innerHTML = `<i class="fas fa-tasks"></i> 0/${totalCombos}`;
                 };
                 reader.readAsText(file);
             }
@@ -319,15 +509,20 @@
             isChecking = true;
             startBtn.disabled = true;
             stopBtn.disabled = false;
+            downloadSuccessBtn.disabled = true;
             
             // Reset counters
             checkedCombos = 0;
             successCombos = 0;
             failCombos = 0;
+            pinExists = 0;
+            pinNone = 0;
+            successfulAccounts = [];
             successList.innerHTML = '';
             failList.innerHTML = '';
             successCount.textContent = '0 başarılı';
             failCount.textContent = '0 başarısız';
+            profilesCount.textContent = '0 PIN Var, 0 PIN Yok';
             
             // Start timer
             startTime = new Date();
@@ -341,6 +536,9 @@
             isChecking = false;
             startBtn.disabled = false;
             stopBtn.disabled = true;
+            if (successCombos > 0) {
+                downloadSuccessBtn.disabled = false;
+            }
             clearInterval(timer);
         }
 
@@ -363,16 +561,41 @@
                     // Update progress
                     const percent = (checkedCombos / totalCombos) * 100;
                     progressBar.style.width = `${percent}%`;
-                    progressInfo.textContent = `${checkedCombos}/${totalCombos}`;
+                    progressInfo.innerHTML = `<i class="fas fa-tasks"></i> ${checkedCombos}/${totalCombos}`;
                     
                     // Add result to appropriate list
                     if (result.success) {
                         successCombos++;
-                        addResultItem(successList, `${email}:${password} | Plan: ${result.plan}`, true);
+                        
+                        // Update PIN counters
+                        if (result.hasPin) {
+                            pinExists++;
+                        } else {
+                            pinNone++;
+                        }
+                        
+                        // Store successful account
+                        successfulAccounts.push({
+                            email,
+                            password,
+                            plan: result.plan,
+                            hasPin: result.hasPin,
+                            profiles: result.profiles
+                        });
+                        
+                        addSuccessItem(
+                            email, 
+                            password, 
+                            result.plan, 
+                            result.hasPin, 
+                            result.profiles
+                        );
+                        
                         successCount.textContent = `${successCombos} başarılı`;
+                        profilesCount.textContent = `${pinExists} PIN Var, ${pinNone} PIN Yok`;
                     } else {
                         failCombos++;
-                        addResultItem(failList, `${email}:${password} | Hata: ${result.error}`, false);
+                        addFailItem(email, password, result.error);
                         failCount.textContent = `${failCombos} başarısız`;
                     }
                     
@@ -392,11 +615,16 @@
                         // Başarılı giriş simülasyonu
                         const plans = ['Standart Aylık', 'Premium Aylık', 'Premium Yıllık'];
                         const plan = plans[Math.floor(Math.random() * plans.length)];
+                        const hasPin = Math.random() > 0.5;
+                        const profileCount = Math.floor(Math.random() * 4) + 1;
+                        
                         resolve({
                             success: true,
                             email,
                             password,
-                            plan
+                            plan,
+                            hasPin,
+                            profiles: profileCount
                         });
                     } else {
                         // Başarısız giriş simülasyonu
@@ -411,12 +639,43 @@
             });
         }
 
-        function addResultItem(container, text, isSuccess) {
+        function addSuccessItem(email, password, plan, hasPin, profiles) {
             const item = document.createElement('div');
             item.className = 'result-item';
-            item.textContent = text;
-            container.appendChild(item);
-            container.scrollTop = container.scrollHeight;
+            
+            item.innerHTML = `
+                <div class="result-item-top">
+                    <strong>${email}:${password}</strong>
+                </div>
+                <div class="result-item-details">
+                    <span class="detail"><i class="fas fa-tag"></i> ${plan}</span>
+                    <span class="detail"><i class="fas fa-users"></i> ${profiles} Profil</span>
+                    <span class="detail pin-status ${hasPin ? 'pin-exists' : 'pin-none'}">
+                        <i class="fas ${hasPin ? 'fa-lock' : 'fa-lock-open'}"></i>
+                        PIN ${hasPin ? 'Var' : 'Yok'}
+                    </span>
+                </div>
+            `;
+            
+            successList.appendChild(item);
+            successList.scrollTop = successList.scrollHeight;
+        }
+
+        function addFailItem(email, password, error) {
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            
+            item.innerHTML = `
+                <div class="result-item-top">
+                    <strong>${email}:${password}</strong>
+                </div>
+                <div class="result-item-details">
+                    <span class="detail"><i class="fas fa-exclamation-triangle"></i> ${error}</span>
+                </div>
+            `;
+            
+            failList.appendChild(item);
+            failList.scrollTop = failList.scrollHeight;
         }
 
         function updateTimer() {
@@ -425,13 +684,35 @@
             const minutes = Math.floor((elapsed % 3600000) / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
             
-            timeInfo.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            timeInfo.innerHTML = `<i class="fas fa-clock"></i> ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        function downloadSuccessful() {
+            if (successfulAccounts.length === 0) return;
+            
+            let content = '';
+            
+            successfulAccounts.forEach(account => {
+                content += `${account.email}:${account.password} | Plan: ${account.plan} | PIN: ${account.hasPin ? 'Var' : 'Yok'} | Profil: ${account.profiles}\n`;
+            });
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = `blutv_basarili_${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         // Sayfa yüklendiğinde
         window.addEventListener('DOMContentLoaded', () => {
             stopBtn.disabled = true;
             startBtn.disabled = true;
+            downloadSuccessBtn.disabled = true;
         });
     </script>
 </body>
