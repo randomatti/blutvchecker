@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BluTV Checker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #16213e;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .input-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #0f3460;
+            border-radius: 8px;
+        }
+        
+        .file-input {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-input label {
+            display: inline-block;
+            background-color: #00bcd4;
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .file-input label:hover {
+            background-color: #00a0b4;
+        }
+        
+        .file-input input[type="file"] {
+            display: none;
+        }
+        
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #e94560;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #d13350;
+        }
+        
+        button:disabled {
+            background-color: #6c6c6c;
+            cursor: not-allowed;
+        }
+        
+        .progress-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #2a2a4a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #00bcd4;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .info {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .results-section {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .result-box {
+            flex: 1;
+            background-color: #0f3460;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .result-box h2 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #2d4a6d;
+            font-size: 1.2rem;
+        }
+        
+        .success h2 {
+            color: #4CAF50;
+        }
+        
+        .fail h2 {
+            color: #FF5252;
+        }
+        
+        .result-list {
+            height: 300px;
+            overflow-y: auto;
+            background-color: #1a2744;
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+        
+        .result-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        
+        .success .result-item {
+            background-color: #1e3a23;
+        }
+        
+        .fail .result-item {
+            background-color: #3a1e1e;
+        }
+        
+        .count {
+            font-size: 0.8rem;
+            text-align: right;
+            margin-top: 0.5rem;
+            color: #ccc;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a2744;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3a4a6d;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a5a7d;
+        }
+        
+        @media (max-width: 768px) {
+            .results-section {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BluTV Checker</h1>
+        
+        <div class="input-section">
+            <div class="file-input">
+                <label for="combo-file">Combo Dosyası Seç (MAIL:PASS formatında)</label>
+                <input type="file" id="combo-file" accept=".txt">
+                <div class="file-name" id="file-name">Dosya seçilmedi</div>
+            </div>
+            
+            <div class="actions">
+                <button id="start-btn" disabled>Taramayı Başlat</button>
+                <button id="stop-btn" disabled>Durdur</button>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="info">
+                    <span id="progress-info">0/0</span>
+                    <span id="time-info">00:00:00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="result-box success">
+                <h2>Başarılı Girişler</h2>
+                <div class="result-list" id="success-list"></div>
+                <div class="count" id="success-count">0 başarılı</div>
+            </div>
+            
+            <div class="result-box fail">
+                <h2>Başarısız Girişler</h2>
+                <div class="result-list" id="fail-list"></div>
+                <div class="count" id="fail-count">0 başarısız</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const comboFileInput = document.getElementById('combo-file');
+        const fileNameDisplay = document.getElementById('file-name');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const progressBar = document.getElementById('progress');
+        const progressInfo = document.getElementById('progress-info');
+        const timeInfo = document.getElementById('time-info');
+        const successList = document.getElementById('success-list');
+        const failList = document.getElementById('fail-list');
+        const successCount = document.getElementById('success-count');
+        const failCount = document.getElementById('fail-count');
+
+        // Variables
+        let comboLines = [];
+        let totalCombos = 0;
+        let checkedCombos = 0;
+        let successCombos = 0;
+        let failCombos = 0;
+        let isChecking = false;
+        let startTime;
+        let timer;
+        
+        // Event Listeners
+        comboFileInput.addEventListener('change', handleFileSelect);
+        startBtn.addEventListener('click', startChecking);
+        stopBtn.addEventListener('click', stopChecking);
+
+        // Functions
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                startBtn.disabled = false;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    comboLines = e.target.result.split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.includes(':'));
+                    totalCombos = comboLines.length;
+                    progressInfo.textContent = `0/${totalCombos}`;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function startChecking() {
+            if (comboLines.length === 0) return;
+            
+            isChecking = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            // Reset counters
+            checkedCombos = 0;
+            successCombos = 0;
+            failCombos = 0;
+            successList.innerHTML = '';
+            failList.innerHTML = '';
+            successCount.textContent = '0 başarılı';
+            failCount.textContent = '0 başarısız';
+            
+            // Start timer
+            startTime = new Date();
+            timer = setInterval(updateTimer, 1000);
+            
+            // Start checking process
+            checkNext();
+        }
+
+        function stopChecking() {
+            isChecking = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            clearInterval(timer);
+        }
+
+        function checkNext() {
+            if (!isChecking || checkedCombos >= totalCombos) {
+                if (isChecking) {
+                    stopChecking();
+                }
+                return;
+            }
+            
+            const combo = comboLines[checkedCombos];
+            const [email, password] = combo.split(':');
+            
+            // Simulate API call to BluTV
+            simulateCheck(email, password)
+                .then(result => {
+                    checkedCombos++;
+                    
+                    // Update progress
+                    const percent = (checkedCombos / totalCombos) * 100;
+                    progressBar.style.width = `${percent}%`;
+                    progressInfo.textContent = `${checkedCombos}/${totalCombos}`;
+                    
+                    // Add result to appropriate list
+                    if (result.success) {
+                        successCombos++;
+                        addResultItem(successList, `${email}:${password} | Plan: ${result.plan}`, true);
+                        successCount.textContent = `${successCombos} başarılı`;
+                    } else {
+                        failCombos++;
+                        addResultItem(failList, `${email}:${password} | Hata: ${result.error}`, false);
+                        failCount.textContent = `${failCombos} başarısız`;
+                    }
+                    
+                    // Continue with next combo after a small delay
+                    setTimeout(checkNext, 100 + Math.random() * 200);
+                });
+        }
+
+        function simulateCheck(email, password) {
+            return new Promise(resolve => {
+                // Simüle edilen API kontrolü
+                // Gerçek bir uygulamada burada BluTV API'sine istek yapılacak
+                setTimeout(() => {
+                    const random = Math.random();
+                    
+                    if (random > 0.7) {
+                        // Başarılı giriş simülasyonu
+                        const plans = ['Standart Aylık', 'Premium Aylık', 'Premium Yıllık'];
+                        const plan = plans[Math.floor(Math.random() * plans.length)];
+                        resolve({
+                            success: true,
+                            email,
+                            password,
+                            plan
+                        });
+                    } else {
+                        // Başarısız giriş simülasyonu
+                        const errors = ['Geçersiz kimlik bilgileri', 'Hesap bulunamadı', 'Abonelik sona ermiş'];
+                        const error = errors[Math.floor(Math.random() * errors.length)];
+                        resolve({
+                            success: false,
+                            error
+                        });
+                    }
+                }, 50 + Math.random() * 150);
+            });
+        }
+
+        function addResultItem(container, text, isSuccess) {
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            item.textContent = text;
+            container.appendChild(item);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function updateTimer() {
+            const elapsed = new Date() - startTime;
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            
+            timeInfo.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Sayfa yüklendiğinde
+        window.addEventListener('DOMContentLoaded', () => {
+            stopBtn.disabled = true;
+            startBtn.disabled = true;
+        });
+    </script>
+</body>
+</html> 
