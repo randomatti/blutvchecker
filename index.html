@@ -580,7 +580,8 @@
                             password,
                             plan: result.plan,
                             hasPin: result.hasPin,
-                            profiles: result.profiles
+                            profiles: result.profiles,
+                            expiryDate: result.expiryDate
                         });
                         
                         addSuccessItem(
@@ -588,7 +589,8 @@
                             password, 
                             result.plan, 
                             result.hasPin, 
-                            result.profiles
+                            result.profiles,
+                            result.expiryDate
                         );
                         
                         successCount.textContent = `${successCombos} başarılı`;
@@ -618,13 +620,25 @@
                         const hasPin = Math.random() > 0.5;
                         const profileCount = Math.floor(Math.random() * 4) + 1;
                         
+                        // Rastgele bir bitiş tarihi oluştur (1-12 ay arası)
+                        const now = new Date();
+                        const monthsToAdd = Math.floor(Math.random() * 12) + 1;
+                        const expiryDate = new Date(now);
+                        expiryDate.setMonth(now.getMonth() + monthsToAdd);
+                        const formattedExpiry = expiryDate.toLocaleDateString('tr-TR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                        
                         resolve({
                             success: true,
                             email,
                             password,
                             plan,
                             hasPin,
-                            profiles: profileCount
+                            profiles: profileCount,
+                            expiryDate: formattedExpiry
                         });
                     } else {
                         // Başarısız giriş simülasyonu
@@ -639,7 +653,7 @@
             });
         }
 
-        function addSuccessItem(email, password, plan, hasPin, profiles) {
+        function addSuccessItem(email, password, plan, hasPin, profiles, expiryDate) {
             const item = document.createElement('div');
             item.className = 'result-item';
             
@@ -653,6 +667,9 @@
                     <span class="detail pin-status ${hasPin ? 'pin-exists' : 'pin-none'}">
                         <i class="fas ${hasPin ? 'fa-lock' : 'fa-lock-open'}"></i>
                         PIN ${hasPin ? 'Var' : 'Yok'}
+                    </span>
+                    <span class="detail expiry-date">
+                        <i class="fas fa-calendar-alt"></i> Bitiş: ${expiryDate}
                     </span>
                 </div>
             `;
@@ -693,7 +710,7 @@
             let content = '';
             
             successfulAccounts.forEach(account => {
-                content += `${account.email}:${account.password} | Plan: ${account.plan} | PIN: ${account.hasPin ? 'Var' : 'Yok'} | Profil: ${account.profiles}\n`;
+                content += `${account.email}:${account.password} | Plan: ${account.plan} | PIN: ${account.hasPin ? 'Var' : 'Yok'} | Profil: ${account.profiles} | Bitiş: ${account.expiryDate}\n`;
             });
             
             const blob = new Blob([content], { type: 'text/plain' });
